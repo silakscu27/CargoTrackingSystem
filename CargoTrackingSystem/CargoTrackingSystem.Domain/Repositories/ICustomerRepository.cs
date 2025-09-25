@@ -1,13 +1,13 @@
 ﻿using CargoTrackingSystem.Domain.Entities;
+using GenericRepository;
 
-namespace CargoTrackingSystem.Domain.Repositories
+namespace CargoTrackingSystem.Domain.Repositories;
+
+public interface ICustomerRepository : IRepository<Customer>
 {
-    public interface ICustomerRepository
-    {
-        Task<Customer?> GetByIdAsync(int id);
-        Task<IEnumerable<Customer>> GetAllAsync();
-        Task AddAsync(Customer customer);
-        Task UpdateAsync(Customer customer);
-        Task DeleteAsync(Customer customer);
-    }
+    // List customers with multiple IDs
+    Task<List<Customer>> GetByIdsAsync(List<Guid> customerIds, CancellationToken cancellationToken);
+
+    // Fetch all customers
+    Task<List<Customer>> GetAllAsync(CancellationToken cancellationToken);
 }
