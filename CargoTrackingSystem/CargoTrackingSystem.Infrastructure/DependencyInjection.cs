@@ -1,4 +1,5 @@
-﻿using CargoTrackingSystem.Domain.Entities;
+﻿using CargoTrackingSystem.Domain.Abstractions;
+using CargoTrackingSystem.Domain.Entities;
 using CargoTrackingSystem.Infrastructure.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
