@@ -1,5 +1,4 @@
 ﻿using CargoTrackingSystem.Domain.Entities;
-using GenericRepository;
 
 namespace CargoTrackingSystem.Domain.Repositories;
 
