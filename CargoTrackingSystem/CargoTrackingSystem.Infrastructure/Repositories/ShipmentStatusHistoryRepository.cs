@@ -17,4 +17,15 @@ public sealed class ShipmentStatusHistoryRepository : BaseRepository<ShipmentSta
             .Where(h => h.ShipmentId == shipmentId)
             .ToListAsync(cancellationToken);
     }
+    public async Task<ShipmentStatusHistory?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await _context.ShipmentStatusHistories
+            .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+    }
+    public async Task<List<ShipmentStatusHistory>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await _context.ShipmentStatusHistories.ToListAsync(cancellationToken);
+    }
+
+
 }
