@@ -9,4 +9,6 @@ public interface ICustomerRepository : IRepository<Customer>
 
     // Fetch all customers
     Task<List<Customer>> GetAllAsync(CancellationToken cancellationToken);
+    Task<Customer?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+
 }

@@ -23,4 +23,12 @@ public sealed class CustomerRepository : BaseRepository<Customer>, ICustomerRepo
         return await _context.Customers
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<Customer?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await _context.Customers
+            .Include(c => c.User)
+            .FirstOrDefaultAsync(c => c.Id == id, cancellationToken);
+    }
+
 }
