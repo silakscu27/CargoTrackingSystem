@@ -1,11 +1,13 @@
 ﻿using CargoTrackingSystem.Domain.Abstractions;
 using CargoTrackingSystem.Domain.Entities;
 using CargoTrackingSystem.Infrastructure.Context;
+using CargoTrackingSystem.Infrastructure.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Scrutor;
 using System.Reflection;
 
@@ -46,6 +48,9 @@ namespace CargoTrackingSystem.Infrastructure
             }).AddJwtBearer();
 
             services.AddAuthorization();
+
+            services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
+            services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>, JwtTokenOptionsSetup>();
 
             // Auto register Repositories / Services (Scrutor)
             services.Scan(scan => scan
