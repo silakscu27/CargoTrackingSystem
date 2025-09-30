@@ -30,4 +30,14 @@ public sealed class ShipmentRepository : BaseRepository<Shipment>, IShipmentRepo
             .Where(s => s.Status == status)
             .ToListAsync(cancellationToken);
     }
+    public async Task<List<Shipment>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await _context.Shipments.ToListAsync(cancellationToken);
+    }
+
+    public async Task<Shipment?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await _context.Shipments
+            .FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
+    }
 }
