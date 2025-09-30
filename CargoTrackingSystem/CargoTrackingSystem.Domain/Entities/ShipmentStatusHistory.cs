@@ -10,6 +10,8 @@ public sealed class ShipmentStatusHistory : Entity
     public string Description { get; set; } = string.Empty;
 
     public Guid CreatedBy { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation properties
