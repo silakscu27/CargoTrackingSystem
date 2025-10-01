@@ -17,4 +17,16 @@ public sealed class WarehouseRepository : BaseRepository<Warehouse>, IWarehouseR
             .Where(w => w.IsActive)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<List<Warehouse>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await _context.Warehouses
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<Warehouse?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await _context.Warehouses
+            .FirstOrDefaultAsync(w => w.Id == id, cancellationToken);
+    }
 }
