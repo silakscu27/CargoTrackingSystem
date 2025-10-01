@@ -24,4 +24,14 @@ public sealed class ShipmentTransferRepository : BaseRepository<ShipmentTransfer
             .Where(t => t.FromWarehouseId == warehouseId || t.ToWarehouseId == warehouseId)
             .ToListAsync(cancellationToken);
     }
+    public async Task<List<ShipmentTransfer>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        return await _context.ShipmentTransfers.ToListAsync(cancellationToken);
+    }
+
+    public async Task<ShipmentTransfer?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await _context.ShipmentTransfers
+            .FirstOrDefaultAsync(st => st.Id == id, cancellationToken);
+    }
 }
