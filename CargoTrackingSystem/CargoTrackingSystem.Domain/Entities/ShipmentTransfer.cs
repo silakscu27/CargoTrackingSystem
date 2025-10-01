@@ -2,13 +2,15 @@
 
 namespace CargoTrackingSystem.Domain.Entities;
 
+using CargoTrackingSystem.Domain.Enums;
+
 public sealed class ShipmentTransfer : Entity
 {
     public Guid ShipmentId { get; set; }
     public Guid FromWarehouseId { get; set; }
     public Guid ToWarehouseId { get; set; }
 
-    public string TransferStatus { get; set; } = string.Empty;
+    public TransferStatus TransferStatus { get; set; } 
     public DateTime? ScheduledDate { get; set; }
     public DateTime? ActualDate { get; set; }
     public Guid CreatedBy { get; set; }
