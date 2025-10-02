@@ -1,4 +1,5 @@
 ﻿using CargoTrackingSystem.Domain.Entities;
+using CargoTrackingSystem.Domain.Enums;
 
 namespace CargoTrackingSystem.Domain.Repositories;
 
@@ -6,7 +7,7 @@ public interface IShipmentRepository : IRepository<Shipment>
 {
     Task<Shipment?> GetByTrackingNumberAsync(string trackingNumber, CancellationToken cancellationToken);
     Task<List<Shipment>> GetByCustomerIdAsync(Guid customerId, CancellationToken cancellationToken);
-    Task<List<Shipment>> GetByStatusAsync(string status, CancellationToken cancellationToken);
+    Task<List<Shipment>> GetByStatusAsync(ShipmentStatus status, CancellationToken cancellationToken);
 
     // to fetch the all shipments
     Task<List<Shipment>> GetAllAsync(CancellationToken cancellationToken);

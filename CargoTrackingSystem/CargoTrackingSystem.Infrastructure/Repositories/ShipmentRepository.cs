@@ -1,4 +1,5 @@
 ﻿using CargoTrackingSystem.Domain.Entities;
+using CargoTrackingSystem.Domain.Enums;
 using CargoTrackingSystem.Domain.Repositories;
 using CargoTrackingSystem.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ public sealed class ShipmentRepository : BaseRepository<Shipment>, IShipmentRepo
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<Shipment>> GetByStatusAsync(string status, CancellationToken cancellationToken)
+    public async Task<List<Shipment>> GetByStatusAsync(ShipmentStatus status, CancellationToken cancellationToken)
     {
         return await _context.Shipments
             .Where(s => s.Status == status)
