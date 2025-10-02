@@ -1,11 +1,12 @@
 ﻿using CargoTrackingSystem.Domain.Abstractions;
+using CargoTrackingSystem.Domain.Enums;
 
 namespace CargoTrackingSystem.Domain.Entities;
 
 public sealed class ShipmentStatusHistory : Entity
 {
     public Guid ShipmentId { get; set; }
-    public string Status { get; set; } = string.Empty;
+    public ShipmentStatus Status { get; set; } 
     public string Location { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
 

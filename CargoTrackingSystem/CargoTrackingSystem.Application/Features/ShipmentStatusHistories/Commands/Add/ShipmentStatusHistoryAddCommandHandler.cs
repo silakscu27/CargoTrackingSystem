@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CargoTrackingSystem.Domain.Abstractions;
 using CargoTrackingSystem.Domain.Entities;
+using CargoTrackingSystem.Domain.Enums;
 using CargoTrackingSystem.Domain.Repositories;
 using MediatR;
 using TS.Result;
@@ -19,6 +20,7 @@ internal sealed class ShipmentStatusHistoryAddCommandHandler(
         ShipmentStatusHistory statusHistory = mapper.Map<ShipmentStatusHistory>(request);
 
         statusHistory.CreatedAt = DateTime.UtcNow;
+        statusHistory.Status = ShipmentStatus.Pending;
 
         shipmentStatusHistoryRepository.Add(statusHistory);
         await unitOfWork.SaveChangesAsync(cancellationToken);
