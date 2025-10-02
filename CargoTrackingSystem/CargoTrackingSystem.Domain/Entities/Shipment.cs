@@ -1,4 +1,5 @@
 ﻿using CargoTrackingSystem.Domain.Abstractions;
+using CargoTrackingSystem.Domain.Enums;
 
 namespace CargoTrackingSystem.Domain.Entities;
 
@@ -12,9 +13,9 @@ public sealed class Shipment : Entity
     public decimal Weight { get; set; }
     public string Dimensions { get; set; } = string.Empty;
     public decimal ContentValue { get; set; }
-    public string ContentType { get; set; } = string.Empty;
+    public ContentType ContentType { get; set; }
 
-    public string Status { get; set; } = string.Empty;
+    public ShipmentStatus Status { get; set; }
     public string CurrentLocation { get; set; } = string.Empty;
     public DateTime? EstimatedDelivery { get; set; }
     public DateTime? ActualDelivery { get; set; }
