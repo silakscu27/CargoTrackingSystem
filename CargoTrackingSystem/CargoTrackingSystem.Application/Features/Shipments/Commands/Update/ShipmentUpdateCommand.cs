@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using CargoTrackingSystem.Domain.Enums;
+using MediatR;
 using TS.Result;
 
 namespace CargoTrackingSystem.Application.Features.Shipments.Commands.Update;
@@ -8,8 +9,8 @@ public sealed record ShipmentUpdateCommand(
     decimal Weight,
     string Dimensions,
     decimal ContentValue,
-    string ContentType,
-    string Status,
+    ContentType ContentType,
+    ShipmentStatus Status,
     string CurrentLocation,
     DateTime? EstimatedDelivery,
     DateTime? ActualDelivery

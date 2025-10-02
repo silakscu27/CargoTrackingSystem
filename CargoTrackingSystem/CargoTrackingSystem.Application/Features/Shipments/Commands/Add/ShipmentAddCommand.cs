@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using CargoTrackingSystem.Domain.Enums;
+using MediatR;
 using TS.Result;
 
 namespace CargoTrackingSystem.Application.Features.Shipments.Commands.Add;
@@ -9,7 +10,8 @@ public sealed record ShipmentAddCommand(
     decimal Weight,
     string Dimensions,
     decimal ContentValue,
-    string ContentType,
+    ContentType ContentType,     
+    ShipmentStatus Status,      
     string CurrentLocation,
     DateTime? EstimatedDelivery,
     Guid CreatedBy

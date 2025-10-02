@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CargoTrackingSystem.Domain.Abstractions;
 using CargoTrackingSystem.Domain.Entities;
+using CargoTrackingSystem.Domain.Enums;
 using CargoTrackingSystem.Domain.Repositories;
 using MediatR;
 using TS.Result;
@@ -20,7 +21,8 @@ internal sealed class ShipmentAddCommandHandler(
 
         // Tracking number can be generated automatically (example: first 8 characters of GUID)
         shipment.TrackingNumber = $"TRK-{Guid.NewGuid().ToString().Substring(0, 8).ToUpper()}";
-        shipment.Status = "Created";
+        shipment.ContentType = ContentType.Other;
+        shipment.Status = ShipmentStatus.Pending;
         shipment.CreatedAt = DateTime.UtcNow;
 
         shipmentRepository.Add(shipment);
