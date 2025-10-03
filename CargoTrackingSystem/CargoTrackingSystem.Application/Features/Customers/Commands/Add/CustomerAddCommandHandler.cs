@@ -8,7 +8,7 @@ using TS.Result;
 
 namespace CargoTrackingSystem.Application.Features.Customers.Commands.Add;
 
-internal sealed class CustomerAddCommandHandler(
+public sealed class CustomerAddCommandHandler(
     ICustomerRepository customerRepository,
     IUnitOfWork unitOfWork,
     IMapper mapper) : IRequestHandler<CustomerAddCommand, Result<Guid>>

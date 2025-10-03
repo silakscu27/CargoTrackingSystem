@@ -7,7 +7,7 @@ using TS.Result;
 
 namespace CargoTrackingSystem.Application.Features.Auth.Login;
 
-internal sealed class LoginCommandHandler(
+public sealed class LoginCommandHandler(
     UserManager<AppUser> userManager,
     IJwtProvider jwtProvider) : IRequestHandler<LoginCommand, Result<LoginCommandResponse>>
 {
