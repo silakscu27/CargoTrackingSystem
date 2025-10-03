@@ -1,57 +1,65 @@
-﻿using CargoTrackingSystem.Application.Features.Auth.Login;
-using CargoTrackingSystem.Application.Services;
+﻿using CargoTrackingSystem.Application.Services;
 using CargoTrackingSystem.Domain.Entities;
+using CargoTrackingSystem.Application.Features.Auth.Login;
+using Microsoft.Extensions.Options;
 using CargoTrackingSystem.Infrastructure.Options;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
-namespace CargoTrackingSystem.Infrastructure.Services;
-
-internal class JwtProvider(
-    UserManager<AppUser> userManager,
-    IOptions<JwtOptions> jwtOptions) : IJwtProvider
+namespace CargoTrackingSystem.Infrastructure.Services
 {
-    public async Task<LoginCommandResponse> CreateToken(AppUser user)
+    public sealed class JwtProvider : IJwtProvider
     {
-        // Add user information as a claim
-        List<Claim> claims = new()
+        private readonly JwtOptions _jwtOptions;
+        private readonly UserManager<AppUser> _userManager;
+
+        public JwtProvider(IOptions<JwtOptions> jwtOptions, UserManager<AppUser> userManager)
         {
-            new Claim("Id", user.Id.ToString()),
-            new Claim("Name", user.FullName),
-            new Claim("Email", user.Email ?? ""),
-            new Claim("UserName", user.UserName ?? "")
-        };
+            _jwtOptions = jwtOptions.Value;
+            _userManager = userManager;
+        }
 
-        DateTime expires = DateTime.UtcNow.AddMonths(1);
+        public async Task<LoginCommandResponse> CreateToken(AppUser user)
+        {
+            // Claim'leri oluştur
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
 
-        // Create signing credentials from secret key
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Value.SecretKey));
-        var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha512);
+            // Rolleri ekle
+            var roles = await _userManager.GetRolesAsync(user);
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
-        // Create JWT token
-        JwtSecurityToken jwtSecurityToken = new(
-            issuer: jwtOptions.Value.Issuer,
-            audience: jwtOptions.Value.Audience,
-            claims: claims,
-            notBefore: DateTime.UtcNow,
-            expires: expires,
-            signingCredentials: signingCredentials);
+            // Token oluştur
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var expires = DateTime.UtcNow.AddHours(1);
+            var refreshTokenExpires = DateTime.UtcNow.AddDays(7); // Refresh token 7 gün geçerli
 
-        string token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+            var token = new JwtSecurityToken(
+                issuer: _jwtOptions.Issuer,
+                audience: _jwtOptions.Audience,
+                claims: claims,
+                expires: expires,
+                signingCredentials: creds
+            );
 
-        // Refresh token
-        string refreshToken = Guid.NewGuid().ToString();
-        DateTime refreshTokenExpires = expires.AddHours(1);
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
-        user.RefreshToken = refreshToken;
-        user.RefreshTokenExpires = refreshTokenExpires;
-
-        await userManager.UpdateAsync(user);
-
-        return new LoginCommandResponse(token, refreshToken, refreshTokenExpires);
+            return new LoginCommandResponse(
+                Token: tokenString,
+                RefreshToken: Guid.NewGuid().ToString(),
+                RefreshTokenExpires: refreshTokenExpires
+            );
+        }
     }
 }

@@ -1,9 +1,10 @@
-﻿using CargoTrackingSystem.Application.Features.Auth.Login;
-using CargoTrackingSystem.Domain.Entities;
+﻿using CargoTrackingSystem.Domain.Entities;
+using CargoTrackingSystem.Application.Features.Auth.Login;
 
-namespace CargoTrackingSystem.Application.Services;
-
-public interface IJwtProvider
+namespace CargoTrackingSystem.Application.Services
 {
-    Task<LoginCommandResponse> CreateToken(AppUser user);
+    public interface IJwtProvider
+    {
+        Task<LoginCommandResponse> CreateToken(AppUser user);
+    }
 }
