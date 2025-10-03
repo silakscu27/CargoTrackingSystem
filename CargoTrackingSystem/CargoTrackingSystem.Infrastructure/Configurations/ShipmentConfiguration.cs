@@ -54,14 +54,17 @@ internal sealed class ShipmentConfiguration : IEntityTypeConfiguration<Shipment>
 
         builder.HasOne(s => s.Creator)
                .WithMany(u => u.CreatedShipments)
-               .HasForeignKey(s => s.CreatedBy);
+               .HasForeignKey(s => s.CreatedBy)
+               .OnDelete(DeleteBehavior.Restrict); 
 
         builder.HasMany(s => s.StatusHistories)
                .WithOne(sh => sh.Shipment)
-               .HasForeignKey(sh => sh.ShipmentId);
+               .HasForeignKey(sh => sh.ShipmentId)
+               .OnDelete(DeleteBehavior.NoAction); 
 
         builder.HasMany(s => s.Transfers)
                .WithOne(t => t.Shipment)
-               .HasForeignKey(t => t.ShipmentId);
+               .HasForeignKey(t => t.ShipmentId)
+               .OnDelete(DeleteBehavior.NoAction); 
     }
 }

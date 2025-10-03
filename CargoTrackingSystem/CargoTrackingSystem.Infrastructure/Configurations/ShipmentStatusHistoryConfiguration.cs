@@ -27,10 +27,12 @@ internal sealed class ShipmentStatusHistoryConfiguration : IEntityTypeConfigurat
 
         builder.HasOne(sh => sh.Shipment)
                .WithMany(s => s.StatusHistories)
-               .HasForeignKey(sh => sh.ShipmentId);
+               .HasForeignKey(sh => sh.ShipmentId)
+               .OnDelete(DeleteBehavior.NoAction); 
 
         builder.HasOne(sh => sh.Creator)
                .WithMany(u => u.CreatedStatusHistories)
-               .HasForeignKey(sh => sh.CreatedBy);
+               .HasForeignKey(sh => sh.CreatedBy)
+               .OnDelete(DeleteBehavior.NoAction); 
     }
 }

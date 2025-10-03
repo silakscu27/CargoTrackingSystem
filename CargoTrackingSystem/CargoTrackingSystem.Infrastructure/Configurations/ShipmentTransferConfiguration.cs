@@ -27,7 +27,8 @@ internal sealed class ShipmentTransferConfiguration : IEntityTypeConfiguration<S
 
         builder.HasOne(st => st.Shipment)
                .WithMany(s => s.Transfers)
-               .HasForeignKey(st => st.ShipmentId);
+               .HasForeignKey(st => st.ShipmentId)
+               .OnDelete(DeleteBehavior.NoAction); 
 
         builder.HasOne(st => st.FromWarehouse)
                .WithMany(w => w.ShipmentTransfersFrom)
