@@ -1,40 +1,46 @@
 ﻿using FluentValidation;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using System.Text.Json;
 using TS.Result;
 
-namespace CargoTrackingSystem.WebAPI.Middlewares
+namespace CargoTrackingSystem.WebAPI.Middlewares;
+
+public sealed class ExceptionHandler
 {
-    public class ExceptionHandler : IExceptionHandler
+    private readonly RequestDelegate _next;
+
+    public ExceptionHandler(RequestDelegate next)
     {
-        public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+        _next = next;
+    }
+
+    public async Task InvokeAsync(HttpContext httpContext)
+    {
+        try
         {
-            Result<string> errorResult;
-
-            httpContext.Response.ContentType = "application/json";
-
-            // If there is a validation error return 403.
-            if (exception is ValidationException validationException)
-            {
-                httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
-
-                var errorFields = validationException.Errors.Select(e => e.PropertyName).ToList();
-
-                errorResult = Result<string>.Failure(StatusCodes.Status403Forbidden, errorFields);
-
-                await httpContext.Response.WriteAsync(JsonSerializer.Serialize(errorResult), cancellationToken);
-                return true;
-            }
-
-            // other errors 500
-            httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-
-            errorResult = Result<string>.Failure(exception.Message);
-
-            await httpContext.Response.WriteAsync(JsonSerializer.Serialize(errorResult), cancellationToken);
-
-            return true;
+            await _next(httpContext);
         }
+        catch (Exception ex)
+        {
+            await HandleExceptionAsync(httpContext, ex);
+        }
+    }
+
+    private static async Task HandleExceptionAsync(HttpContext httpContext, Exception exception)
+    {
+        httpContext.Response.ContentType = "application/json";
+
+        if (exception is ValidationException validationException)
+        {
+            httpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+            var errorFields = validationException.Errors.Select(e => e.PropertyName).ToList();
+            var errorResult = Result<string>.Failure(StatusCodes.Status403Forbidden, errorFields);
+            await httpContext.Response.WriteAsync(JsonSerializer.Serialize(errorResult));
+            return;
+        }
+
+        httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        var result = Result<string>.Failure(exception.Message);
+        await httpContext.Response.WriteAsync(JsonSerializer.Serialize(result));
     }
 }
