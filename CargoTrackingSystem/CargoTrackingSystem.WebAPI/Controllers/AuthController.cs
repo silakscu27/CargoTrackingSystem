@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CargoTrackingSystem.WebAPI.Controllers
 {
-    [AllowAnonymous] 
+    [AllowAnonymous]
     public sealed class AuthController : ApiController
     {
         public AuthController(IMediator mediator) : base(mediator)

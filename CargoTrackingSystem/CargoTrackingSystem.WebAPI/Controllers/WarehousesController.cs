@@ -24,7 +24,7 @@ public sealed class WarehousesController : ApiController
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
-        var request = new WarehouseGetByIdQuery(id);
+        var request = new WarehouseGetByIdQuery { Id = id }; 
         var response = await _mediator.Send(request, cancellationToken);
         return StatusCode(response.StatusCode, response);
     }
