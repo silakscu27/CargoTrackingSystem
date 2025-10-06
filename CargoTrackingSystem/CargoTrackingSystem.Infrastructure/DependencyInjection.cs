@@ -59,11 +59,13 @@ namespace CargoTrackingSystem.Infrastructure
 
             services.AddAuthorization();
 
-            // automapper
-            services.AddAutoMapper(
-                Assembly.GetExecutingAssembly(),
-                typeof(CargoTrackingSystem.Application.Features.Auth.Login.LoginCommand).Assembly
-            );
+            // AutoMapper
+            services.AddAutoMapper(cfg =>
+            {
+            },
+            Assembly.GetExecutingAssembly(),
+            typeof(CargoTrackingSystem.Application.Mapping.MappingProfile).Assembly);
+
 
             // Scrutor - Service / Repository Auto Registration
             services.Scan(scan => scan
