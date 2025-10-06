@@ -8,29 +8,36 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// --- Infrastructure registration ---
 builder.Services.AddInfrastructure(builder.Configuration);
 
+// --- MediatR registration ---
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssemblies(
-        Assembly.GetExecutingAssembly(),
-        typeof(CargoTrackingSystem.Application.Features.Auth.Login.LoginCommand).Assembly
+        Assembly.GetExecutingAssembly(), // WebAPI
+        typeof(CargoTrackingSystem.Application.Features.Auth.Login.LoginCommand).Assembly // Application
     );
 });
 
-// builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+// --- AutoMapper global registration ---
+builder.Services.AddAutoMapper(cfg =>
+{
+}, typeof(CargoTrackingSystem.Application.Mapping.MappingProfile).Assembly);
 
+
+// --- Controllers, Swagger, etc. ---
 builder.Services.AddControllers();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// --- Custom middlewares ---
 ExtensionsMiddleware.CreateFirstUser(app);
-
 app.UseMiddleware<ExceptionHandler>();
 
+// --- Swagger & pipeline ---
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
