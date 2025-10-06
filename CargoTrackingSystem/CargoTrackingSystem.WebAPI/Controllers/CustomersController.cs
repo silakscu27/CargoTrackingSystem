@@ -37,7 +37,7 @@ public sealed class CustomersController : ApiController
     }
 
     [HttpPut]
-    public async Task<IActionResult> Update(CustomerUpdateCommand request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Update(CustomerUpdateCommand request, CancellationToken cancellationToken) 
     {
         var response = await _mediator.Send(request, cancellationToken);
         return StatusCode(response.StatusCode, response);

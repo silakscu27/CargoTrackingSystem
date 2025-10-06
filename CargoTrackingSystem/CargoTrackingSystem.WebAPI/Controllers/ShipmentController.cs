@@ -2,20 +2,16 @@
 using CargoTrackingSystem.Application.Features.Shipments.Commands.Update;
 using CargoTrackingSystem.Application.Features.Shipments.Queries.GetAll;
 using CargoTrackingSystem.Application.Features.Shipments.Queries.GetById;
+using CargoTrackingSystem.WebAPI.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CargoTrackingSystem.API.Controllers;
+namespace CargoTrackingSystem.WebAPI.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-public sealed class ShipmentController : ControllerBase
+public sealed class ShipmentsController : ApiController
 {
-    private readonly IMediator _mediator;
-
-    public ShipmentController(IMediator mediator)
+    public ShipmentsController(IMediator mediator) : base(mediator)
     {
-        _mediator = mediator;
     }
 
     [HttpGet]
