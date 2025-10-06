@@ -20,7 +20,7 @@ public sealed class ShipmentsController : ApiController
         var response = await _mediator.Send(request, cancellationToken);
         return StatusCode(response.StatusCode, response);
     }
-
+    [HttpGet]
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
     {
